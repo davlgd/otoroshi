@@ -1159,7 +1159,7 @@ Temporarily bans client when too many failed requests occur within a detection w
 
 ```json
 {
-  "identifier" : "${route.id}-${req.ip}",
+  "identifier" : "${req.ip}",
   "detect_time" : 600000,
   "ban_time" : 10800000,
   "max_retry" : 4,
@@ -2056,11 +2056,7 @@ This plugin verifies the current request with one or more jwt verifier
 
 ```json
 {
-  "verifiers" : [ ],
-  "custom_response" : false,
-  "custom_response_status" : 401,
-  "custom_response_headers" : { },
-  "custom_response_body" : "{\"error\":\"unauthorized\"}"
+  "verifiers" : [ ]
 }
 ```
 
@@ -2094,11 +2090,7 @@ This plugin verifies the current request with one jwt verifier
 ```json
 {
   "verifier" : null,
-  "fail_if_absent" : true,
-  "custom_response" : false,
-  "custom_response_status" : 401,
-  "custom_response_headers" : { },
-  "custom_response_body" : "{\"error\":\"unauthorized\"}"
+  "fail_if_absent" : true
 }
 ```
 
@@ -3345,17 +3337,11 @@ Check if client certificate matches the following fetched from an http endpoint
 
 ```json
 {
-  "url" : "https://validate.foo.bar",
-  "method" : "GET",
-  "timeout" : 2000,
-  "headers" : { },
-  "tls" : {
-    "certs" : [ ],
-    "trusted_certs" : [ ],
-    "enabled" : false,
-    "loose" : false,
-    "trust_all" : false
-  }
+  "serial_numbers" : [ ],
+  "subject_dns" : [ ],
+  "issuer_dns" : [ ],
+  "regex_subject_dns" : [ ],
+  "regex_issuer_dns" : [ ]
 }
 ```
 
@@ -4044,8 +4030,7 @@ This plugin will mirror every request to other targets
   "to" : "https://foo.bar.dev",
   "enabled" : true,
   "capture_response" : false,
-  "generate_events" : false,
-  "headers" : { }
+  "generate_events" : false
 }
 ```
 
@@ -4421,54 +4406,6 @@ This plugin injects headers containing tokens and profile from current OIDC prov
     "headerName" : "X-OIDC-Access-Token",
     "jwt" : true
   }
-}
-```
-
-
-
-
-
-@@@
-
-
-@@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.OpenFGAValidator }
-
-## OpenFGA validator
-
-### Defined on steps
-
-  - `ValidateAccess`
-
-### Plugin reference
-
-`cp:otoroshi.next.plugins.OpenFGAValidator`
-
-### Description
-
-Enforces fine-grained authorizations using OpenFGA
-
-
-
-### Default configuration
-
-```json
-{
-  "url" : "http://localhost:8088",
-  "token" : null,
-  "tls_config" : {
-    "certs" : [ ],
-    "trusted_certs" : [ ],
-    "enabled" : false,
-    "loose" : false,
-    "trust_all" : false
-  },
-  "timeout" : 10000,
-  "store_id" : "--",
-  "model_id" : "--",
-  "tuple_key" : { },
-  "contextual_tuples" : [ ],
-  "cache" : false,
-  "ttl" : 10000
 }
 ```
 
@@ -4958,39 +4895,6 @@ This plugin check if current user/apikey/jwt token has the right role
   "user_path" : null,
   "role_prefix" : null,
   "roles" : "roles"
-}
-```
-
-
-
-
-
-@@@
-
-
-@@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.React2SShellDetector }
-
-## React2Shell detector
-
-### Defined on steps
-
-  - `TransformRequest`
-
-### Plugin reference
-
-`cp:otoroshi.next.plugins.React2SShellDetector`
-
-### Description
-
-This plugin detects (and block) React2Shell attacks
-
-
-
-### Default configuration
-
-```json
-{
-  "block" : false
 }
 ```
 
@@ -6173,8 +6077,8 @@ This plugin can split a portion of the traffic to canary backends between two da
 
 ```json
 {
-  "start" : "2026-01-07T13:12:21.800Z",
-  "stop" : "2026-01-08T13:12:21.821Z",
+  "start" : "2025-11-28T07:41:09.778Z",
+  "stop" : "2025-11-29T07:41:09.799Z",
   "increment_percent" : 1,
   "targets" : [ ],
   "root" : "/"
@@ -6237,31 +6141,6 @@ This plugin restrict when a route is accessible
 ### Description
 
 This plugin creates UDP tunnels through otoroshi
-
-
-
-
-
-
-
-@@@
-
-
-@@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.UserLogoutEndpoint }
-
-## User logout endpoint
-
-### Defined on steps
-
-  - `CallBackend`
-
-### Plugin reference
-
-`cp:otoroshi.next.plugins.UserLogoutEndpoint`
-
-### Description
-
-This plugin logout the current user
 
 
 
@@ -7020,7 +6899,7 @@ Handle unmatched requests with a wasm plugin
 
 @@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.WasmWebsocketTransformer }
 
-## Websocket Wasm transformer
+## Wasm Websocket transformer
 
 ### Defined on steps
 
@@ -7168,39 +7047,6 @@ Validate the json
 @@@
 
 
-@@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.WebsocketMirrorBackend }
-
-## Websocket mirror backend
-
-### Defined on steps
-
-  - `CallBackend`
-
-### Plugin reference
-
-`cp:otoroshi.next.plugins.WebsocketMirrorBackend`
-
-### Description
-
-Mirror incoming websocket messages to another target
-
-
-
-### Default configuration
-
-```json
-{
-  "url" : null
-}
-```
-
-
-
-
-
-@@@
-
-
 @@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.WebsocketSizeValidator }
 
 ## Websocket size validator
@@ -7261,41 +7107,6 @@ Validate the type of each frame
 {
   "allowed_format" : "all",
   "reject_strategy" : "drop"
-}
-```
-
-
-
-
-
-@@@
-
-
-@@@ div { .ng-plugin .plugin-hidden .pl #otoroshi.next.plugins.WorkflowWebsocketTransformer }
-
-## Websocket Workflow transformer
-
-### Defined on steps
-
-  - `TransformRequest`
-  - `TransformResponse`
-
-### Plugin reference
-
-`cp:otoroshi.next.plugins.WorkflowWebsocketTransformer`
-
-### Description
-
-Transform messages and filter websocket messages
-
-
-
-### Default configuration
-
-```json
-{
-  "incoming_workflow" : null,
-  "outgoing_workflow" : null
 }
 ```
 
