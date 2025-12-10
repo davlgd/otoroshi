@@ -572,6 +572,50 @@ class BackOfficeController(
       }
     }
 
+  def simpleUI =
+    BackOfficeActionAuth.async { ctx =>
+      env.datastores.globalConfigDataStore.singleton().flatMap { config =>
+        env.datastores.tenantDataStore.findAll().map { tenants =>
+          val userTenants = tenants
+            .filter(t => ctx.user.rights.rights.exists(r => r.tenant.canRead && r.tenant.matches(t.id)))
+            .filterNot(_.id == TenantId.all)
+            .map(_.id.value)
+          Ok(
+            otoroshi.views.html.backoffice.simpleui(
+              ctx.user,
+              config,
+              env,
+              env.otoroshiVersion,
+              userTenants,
+              ctx.request.session.get("ui-mode").getOrElse("dark")
+            )
+          )
+        }
+      }
+    }
+
+  def simpleUIRoutes(ui: String) =
+    BackOfficeActionAuth.async { ctx =>
+      env.datastores.globalConfigDataStore.singleton().flatMap { config =>
+        env.datastores.tenantDataStore.findAll().map { tenants =>
+          val userTenants = tenants
+            .filter(t => ctx.user.rights.rights.exists(r => r.tenant.canRead && r.tenant.matches(t.id)))
+            .filterNot(_.id == TenantId.all)
+            .map(_.id.value)
+          Ok(
+            otoroshi.views.html.backoffice.simpleui(
+              ctx.user,
+              config,
+              env,
+              env.otoroshiVersion,
+              userTenants,
+              ctx.request.session.get("ui-mode").getOrElse("dark")
+            )
+          )
+        }
+      }
+    }
+
   def error(message: Option[String]) =
     BackOfficeAction { ctx =>
       Ok(otoroshi.views.html.oto.error(message.getOrElse("Error message"), env))

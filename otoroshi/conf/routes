@@ -33,6 +33,10 @@ GET     /bo/cacert                                            otoroshi.controlle
 GET     /bo/dashboard                                         otoroshi.controllers.BackOfficeController.dashboard
 GET     /bo/dashboard/                                        otoroshi.controllers.BackOfficeController.dashboard
 GET     /bo/dashboard/*ui                                     otoroshi.controllers.BackOfficeController.dashboardRoutes(ui)
+# Simple UI - Simplified interface for route creation
+GET     /bo/simple-ui                                         otoroshi.controllers.BackOfficeController.simpleUI
+GET     /bo/simple-ui/                                        otoroshi.controllers.BackOfficeController.simpleUI
+GET     /bo/simple-ui/*ui                                     otoroshi.controllers.BackOfficeController.simpleUIRoutes(ui)
 GET     /bo/api/lines/:lineId/:serviceId/docframe             otoroshi.controllers.BackOfficeController.documentationFrame(lineId, serviceId)
 GET     /bo/api/lines/:lineId/:serviceId/docdesc              otoroshi.controllers.BackOfficeController.documentationFrameDescriptor(lineId, serviceId)
 POST    /bo/api/search/services                               otoroshi.controllers.BackOfficeController.searchServicesApi()

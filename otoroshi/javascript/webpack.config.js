@@ -14,7 +14,8 @@ module.exports = (env, argv) => {
       backoffice: path.resolve(__dirname, 'src/backoffice.js'),
       genericlogin: path.resolve(__dirname, 'src/genericlogin.js'),
       multilogin: path.resolve(__dirname, 'src/multilogin.js'),
-      simplelogin: path.resolve(__dirname, 'src/simplelogin.js')
+      simplelogin: path.resolve(__dirname, 'src/simplelogin.js'),
+      simpleui: path.resolve(__dirname, 'src/simpleui.js')
     },
     output: {
       filename: '[name].js',

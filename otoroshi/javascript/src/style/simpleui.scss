@@ -1,0 +1,574 @@
+// Simple UI - Modern, clean interface for Otoroshi
+// Designed for DSI and beginners
+
+// Variables
+$sui-primary: #f9b000;
+$sui-primary-hover: #e5a200;
+$sui-primary-light: rgba(249, 176, 0, 0.1);
+
+$sui-success: #10b981;
+$sui-error: #ef4444;
+$sui-warning: #f59e0b;
+
+$sui-gray-50: #fafafa;
+$sui-gray-100: #f4f4f5;
+$sui-gray-200: #e4e4e7;
+$sui-gray-300: #d4d4d8;
+$sui-gray-400: #a1a1aa;
+$sui-gray-500: #71717a;
+$sui-gray-600: #52525b;
+$sui-gray-700: #3f3f46;
+$sui-gray-800: #27272a;
+$sui-gray-900: #18181b;
+
+$sui-radius-sm: 6px;
+$sui-radius: 8px;
+$sui-radius-lg: 12px;
+$sui-radius-xl: 16px;
+
+$sui-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$sui-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+$sui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$sui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+$sui-transition: all 0.2s ease;
+
+// Dark mode variables
+:root {
+  --sui-bg: #{$sui-gray-900};
+  --sui-bg-elevated: #{$sui-gray-800};
+  --sui-bg-card: #{$sui-gray-800};
+  --sui-border: #{$sui-gray-700};
+  --sui-text: #ffffff;
+  --sui-text-secondary: #{$sui-gray-400};
+  --sui-text-muted: #{$sui-gray-500};
+}
+
+[data-theme="light"] {
+  --sui-bg: #{$sui-gray-50};
+  --sui-bg-elevated: #ffffff;
+  --sui-bg-card: #ffffff;
+  --sui-border: #{$sui-gray-200};
+  --sui-text: #{$sui-gray-900};
+  --sui-text-secondary: #{$sui-gray-600};
+  --sui-text-muted: #{$sui-gray-500};
+}
+
+// Reset and base
+.sui-app {
+  min-height: 100vh;
+  background: var(--sui-bg);
+  color: var(--sui-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Header
+.sui-header {
+  background: var(--sui-bg-elevated);
+  border-bottom: 1px solid var(--sui-border);
+  padding: 0 24px;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sui-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sui-logo {
+  height: 32px;
+  width: auto;
+}
+
+.sui-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.sui-link-advanced {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sui-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: $sui-radius;
+  transition: $sui-transition;
+
+  &:hover {
+    color: var(--sui-text);
+    background: var(--sui-bg);
+  }
+
+  svg {
+    opacity: 0.7;
+  }
+}
+
+// Main content
+.sui-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+// Footer
+.sui-footer {
+  padding: 16px 24px;
+  text-align: center;
+  color: var(--sui-text-muted);
+  font-size: 12px;
+  border-top: 1px solid var(--sui-border);
+}
+
+// Creator component
+.sui-creator {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.sui-creator-card {
+  background: var(--sui-bg-card);
+  border: 1px solid var(--sui-border);
+  border-radius: $sui-radius-xl;
+  padding: 32px;
+  box-shadow: $sui-shadow-lg;
+}
+
+// Steps indicator
+.sui-steps {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 40px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 80px);
+    height: 2px;
+    background: var(--sui-border);
+    z-index: 0;
+  }
+}
+
+.sui-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.sui-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--sui-bg);
+  border: 2px solid var(--sui-border);
+  color: var(--sui-text-muted);
+  transition: $sui-transition;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.sui-step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sui-text-muted);
+  transition: $sui-transition;
+}
+
+.sui-step--active {
+  .sui-step-number {
+    background: $sui-primary;
+    border-color: $sui-primary;
+    color: $sui-gray-900;
+  }
+
+  .sui-step-label {
+    color: var(--sui-text);
+  }
+}
+
+.sui-step--completed {
+  .sui-step-number {
+    background: $sui-success;
+    border-color: $sui-success;
+    color: white;
+  }
+}
+
+// Step content
+.sui-step-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sui-step-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--sui-text);
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--sui-text-secondary);
+    margin: 0;
+  }
+}
+
+.sui-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: $sui-primary-light;
+  border-radius: $sui-radius-lg;
+  margin-bottom: 16px;
+
+  svg {
+    width: 24px;
+    height: 24px;
+    stroke: $sui-primary;
+  }
+}
+
+// Form elements
+.sui-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--sui-text);
+  }
+}
+
+.sui-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--sui-text);
+  background: var(--sui-bg);
+  border: 1px solid var(--sui-border);
+  border-radius: $sui-radius;
+  outline: none;
+  transition: $sui-transition;
+
+  &::placeholder {
+    color: var(--sui-text-muted);
+  }
+
+  &:focus {
+    border-color: $sui-primary;
+    box-shadow: 0 0 0 3px $sui-primary-light;
+  }
+
+  &--error {
+    border-color: $sui-error;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($sui-error, 0.1);
+    }
+  }
+}
+
+.sui-input-hint {
+  font-size: 12px;
+  color: var(--sui-text-muted);
+}
+
+.sui-input-error {
+  font-size: 12px;
+  color: $sui-error;
+}
+
+// Buttons
+.sui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  border-radius: $sui-radius;
+  border: none;
+  cursor: pointer;
+  transition: $sui-transition;
+  text-decoration: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.sui-btn--primary {
+  background: $sui-primary;
+  color: $sui-gray-900;
+
+  &:hover:not(:disabled) {
+    background: $sui-primary-hover;
+  }
+}
+
+.sui-btn--secondary {
+  background: transparent;
+  color: var(--sui-text-secondary);
+  border: 1px solid var(--sui-border);
+
+  &:hover:not(:disabled) {
+    background: var(--sui-bg);
+    color: var(--sui-text);
+  }
+}
+
+.sui-btn--large {
+  padding: 16px 24px;
+  font-size: 15px;
+}
+
+// Actions bar
+.sui-creator-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sui-border);
+}
+
+// Error banner
+.sui-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba($sui-error, 0.1);
+  border: 1px solid rgba($sui-error, 0.2);
+  border-radius: $sui-radius;
+  margin-bottom: 24px;
+
+  span {
+    color: $sui-error;
+    font-size: 13px;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: $sui-error;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: $sui-radius-sm;
+
+    &:hover {
+      background: rgba($sui-error, 0.1);
+    }
+  }
+}
+
+// Creating state
+.sui-creating {
+  text-align: center;
+  padding: 60px 20px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 24px 0 8px;
+  }
+
+  p {
+    color: var(--sui-text-secondary);
+    margin: 0;
+  }
+}
+
+.sui-creating-animation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: $sui-primary-light;
+  border-radius: 50%;
+
+  svg {
+    width: 32px;
+    height: 32px;
+    stroke: $sui-primary;
+  }
+}
+
+.sui-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sui-progress {
+  width: 200px;
+  height: 4px;
+  background: var(--sui-border);
+  border-radius: 2px;
+  margin: 24px auto 0;
+  overflow: hidden;
+}
+
+.sui-progress-bar {
+  height: 100%;
+  background: $sui-primary;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+// Success state
+.sui-success {
+  text-align: center;
+  padding: 40px 20px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 24px 0 8px;
+    color: $sui-success;
+  }
+}
+
+.sui-success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  background: rgba($sui-success, 0.1);
+  border-radius: 50%;
+
+  svg {
+    width: 36px;
+    height: 36px;
+    stroke: $sui-success;
+    stroke-width: 3;
+  }
+}
+
+.sui-success-name {
+  font-size: 16px;
+  color: var(--sui-text-secondary);
+  margin-bottom: 32px;
+}
+
+.sui-success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+// Responsive
+@media (max-width: 640px) {
+  .sui-header {
+    padding: 0 16px;
+  }
+
+  .sui-main {
+    padding: 24px 16px;
+  }
+
+  .sui-creator-card {
+    padding: 24px;
+  }
+
+  .sui-steps {
+    gap: 16px;
+
+    &::before {
+      width: calc(100% - 48px);
+    }
+  }
+
+  .sui-step-label {
+    display: none;
+  }
+
+  .sui-step-header h2 {
+    font-size: 20px;
+  }
+
+  .sui-creator-actions {
+    flex-direction: column-reverse;
+
+    .sui-btn {
+      width: 100%;
+    }
+  }
+}
