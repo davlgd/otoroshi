@@ -1,8 +1,363 @@
+// ========================================
+// Dashboard Metrics - Premium Design System
+// ========================================
+
+// Color variants for stat cards
+$stat-colors: (
+  'yellow': (
+    base: #f59e0b,
+    light: rgba(245, 158, 11, 0.15),
+    glow: rgba(245, 158, 11, 0.4),
+  ),
+  'blue': (
+    base: #3b82f6,
+    light: rgba(59, 130, 246, 0.15),
+    glow: rgba(59, 130, 246, 0.4),
+  ),
+  'purple': (
+    base: #8b5cf6,
+    light: rgba(139, 92, 246, 0.15),
+    glow: rgba(139, 92, 246, 0.4),
+  ),
+  'green': (
+    base: #10b981,
+    light: rgba(16, 185, 129, 0.15),
+    glow: rgba(16, 185, 129, 0.4),
+  ),
+  'cyan': (
+    base: #06b6d4,
+    light: rgba(6, 182, 212, 0.15),
+    glow: rgba(6, 182, 212, 0.4),
+  ),
+  'orange': (
+    base: #f97316,
+    light: rgba(249, 115, 22, 0.15),
+    glow: rgba(249, 115, 22, 0.4),
+  ),
+  'zinc': (
+    base: #71717a,
+    light: rgba(113, 113, 122, 0.1),
+    glow: rgba(113, 113, 122, 0.2),
+  ),
+);
+
+// ========================================
+// Metrics Dashboard Container
+// ========================================
+
+.metrics-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ========================================
+// Metrics Group (Section)
+// ========================================
+
+.metrics-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ds-text-primary, #fafafa);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+}
+
+// Pulse dot for live indicator
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    background: rgba(16, 185, 129, 0.4);
+    border-radius: 50%;
+    animation: pulse-ring 2s ease-out infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+// ========================================
+// Metrics Grid
+// ========================================
+
+.metrics-grid {
+  display: grid;
+  gap: 16px;
+
+  &--3 {
+    grid-template-columns: repeat(3, 1fr);
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &--2 {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// ========================================
+// Stat Card
+// ========================================
+
+.stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: linear-gradient(
+    145deg,
+    rgba(39, 39, 42, 0.8) 0%,
+    rgba(24, 24, 27, 0.9) 100%
+  );
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(113, 113, 122, 0.5);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+
+    .stat-card__glow {
+      opacity: 1;
+    }
+  }
+
+  // Color variants
+  @each $name, $colors in $stat-colors {
+    &--#{$name} {
+      .stat-card__icon {
+        color: map-get($colors, base);
+        background: map-get($colors, light);
+      }
+
+      .stat-card__sparkline {
+        color: map-get($colors, base);
+      }
+
+      .stat-card__glow {
+        background: radial-gradient(
+          circle at 50% 0%,
+          map-get($colors, glow) 0%,
+          transparent 70%
+        );
+      }
+
+      &:hover {
+        border-color: rgba(map-get($colors, base), 0.3);
+      }
+    }
+  }
+
+  // Simple variant (no sparkline)
+  &--simple {
+    .stat-card__body {
+      margin-top: auto;
+    }
+  }
+
+  // Header
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    color: var(--ds-text-secondary, #a1a1aa);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  // Body
+  &__body {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  &__value {
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    color: var(--ds-text-primary, #fafafa);
+    line-height: 1;
+  }
+
+  &__trend {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &--up {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    &--down {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+  }
+
+  // Sparkline
+  &__sparkline {
+    height: 40px;
+    margin: 0 -16px -16px;
+    padding: 0 16px;
+    opacity: 0.8;
+  }
+
+  // Glow effect on hover
+  &__glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+}
+
+// ========================================
+// Loading State
+// ========================================
+
+.metrics-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 24px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+}
+
+.spinner-svg {
+  animation: spinner-rotate 2s linear infinite;
+}
+
+.spinner-track {
+  opacity: 0.2;
+}
+
+.spinner-head {
+  animation: spinner-dash 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes spinner-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 100, 200;
+    stroke-dashoffset: -125;
+  }
+}
+
+.loading-text {
+  color: var(--ds-text-secondary, #a1a1aa);
+  font-size: 14px;
+  margin: 0;
+}
+
+// ========================================
+// Legacy support (keep old classes working)
+// ========================================
+
+.live-title {
+  color: var(--ds-text-muted, #71717a);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 24px 0 16px;
+  padding-left: 10px;
+}
+
 .rowMetrics {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .metric {
@@ -10,14 +365,25 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
-  background-color: var(--bg-color_level2);
-  height: 100px;
-  margin: 10px;
-  font-family: 'Roboto';
-  font-size: 23px;
-  font-weight: bold;
-  color: #fff;
+  border-radius: var(--radius-md, 10px);
+  background: linear-gradient(145deg, var(--bg-color_level3) 0%, var(--bg-color_level2) 100%);
+  border: 1px solid var(--border-color, #3f3f46);
+  height: 110px;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ds-text-primary, #fafafa);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  box-shadow: var(--card-shadow);
+
+  &:hover {
+    border-color: var(--border-color-hover, #52525b);
+    box-shadow: var(--card-shadow-lg);
+    transform: translateY(-2px);
+  }
 }
 
 .metric-text {
@@ -27,6 +393,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 16px;
 }
 
 .metric-box {
@@ -35,15 +402,35 @@
   z-index: 100;
   position: relative;
   margin-top: 10px;
+  opacity: 0.8;
 }
 
-
-.metric-text-value{
-  text-shadow: rgb(0, 0, 0) 1px 1px, rgb(0, 0, 0) -1px 1px, rgb(0, 0, 0) -1px -1px, rgb(0, 0, 0) 1px -1px;
+.metric-text-value {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--ds-text-primary, #fafafa);
 }
 
-.metric-text-title{
-    text-shadow: rgb(0, 0, 0) 1px 1px, rgb(0, 0, 0) -1px 1px, rgb(0, 0, 0) -1px -1px, rgb(0, 0, 0) 1px -1px;
-        font-size: 22px;
-        font-weight: normal;
+.metric-text-title {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ds-text-secondary, #a1a1aa);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+a:has(.metric) {
+  text-decoration: none;
+
+  &:hover .metric {
+    border-color: var(--color-primary);
+
+    .metric-text-value {
+      color: var(--color-primary);
+    }
+  }
 }
