@@ -18,24 +18,98 @@ export const SimpleUIContext = createContext({
 
 export const useSimpleUI = () => useContext(SimpleUIContext);
 
-// Theme Material UI
+// Theme Material UI - Dark Mode
 const theme = createTheme({
   palette: {
-    mode: "light",
+    mode: "dark",
     primary: {
       main: "#f9b000",
-      contrastText: "#000",
+      contrastText: "#18181b",
+    },
+    secondary: {
+      main: "#a1a1aa",
     },
     background: {
-      default: "#f5f5f5",
-      paper: "#ffffff",
+      default: "#18181b",
+      paper: "#27272a",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "#a1a1aa",
+    },
+    divider: "#3f3f46",
+    error: {
+      main: "#ef4444",
+    },
+    success: {
+      main: "#10b981",
     },
   },
   typography: {
-    fontFamily: '"Inter", "Segoe UI", "Roboto", "Helvetica", sans-serif',
+    fontFamily:
+      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
   },
   shape: {
     borderRadius: 8,
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundColor: "#18181b",
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+          border: "1px solid #3f3f46",
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            backgroundColor: "#18181b",
+            "& fieldset": {
+              borderColor: "#3f3f46",
+            },
+            "&:hover fieldset": {
+              borderColor: "#52525b",
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#f9b000",
+            },
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        contained: {
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "0 4px 12px rgba(249, 176, 0, 0.3)",
+          },
+        },
+        outlined: {
+          borderColor: "#3f3f46",
+          "&:hover": {
+            borderColor: "#52525b",
+            backgroundColor: "rgba(255, 255, 255, 0.05)",
+          },
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
   },
 });
 

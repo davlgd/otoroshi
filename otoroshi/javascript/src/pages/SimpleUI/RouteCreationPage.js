@@ -190,14 +190,17 @@ export function RouteCreationPage({ env }) {
     <>
       <AppBar
         position="static"
-        color="default"
-        elevation={2}
-        sx={{ bgcolor: "white" }}
+        elevation={0}
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
       >
         <Toolbar>
           <Typography
             variant="h6"
-            sx={{ flexGrow: 1, fontWeight: 700, color: "#f9b000" }}
+            sx={{ flexGrow: 1, fontWeight: 700, color: "primary.main" }}
           >
             <RouteIcon sx={{ mr: 1, verticalAlign: "middle" }} />
             Otoroshi Simple UI
@@ -205,7 +208,7 @@ export function RouteCreationPage({ env }) {
           <Button
             href="/bo/dashboard"
             startIcon={<DashboardIcon />}
-            sx={{ mr: 2, textTransform: "none" }}
+            sx={{ mr: 2, textTransform: "none", color: "text.secondary" }}
           >
             Advanced Interface
           </Button>
@@ -223,18 +226,18 @@ export function RouteCreationPage({ env }) {
       <Box
         sx={{
           minHeight: "calc(100vh - 64px)",
-          background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+          bgcolor: "background.default",
           py: 6,
         }}
       >
         <Container maxWidth="md">
-          <Card elevation={8} sx={{ borderRadius: 3 }} className="fade-in">
+          <Card elevation={0} sx={{ borderRadius: 3 }} className="fade-in">
             <CardContent sx={{ p: 5 }}>
               <Box sx={{ textAlign: "center", mb: 4 }}>
                 <Typography
                   variant="h4"
                   gutterBottom
-                  sx={{ fontWeight: 700, color: "#1a1a1a" }}
+                  sx={{ fontWeight: 700, color: "text.primary" }}
                 >
                   Create a New Route
                 </Typography>
@@ -245,7 +248,7 @@ export function RouteCreationPage({ env }) {
                 </Typography>
               </Box>
 
-              <Divider sx={{ my: 3 }} />
+              <Divider sx={{ my: 3, borderColor: "divider" }} />
 
               {error && (
                 <Alert
@@ -350,10 +353,6 @@ export function RouteCreationPage({ env }) {
                     textTransform: "none",
                     fontSize: "1.1rem",
                     fontWeight: 600,
-                    boxShadow: 3,
-                    "&:hover": {
-                      boxShadow: 6,
-                    },
                   }}
                 >
                   {loading ? "Creating Route..." : "Create Route"}
@@ -369,6 +368,22 @@ export function RouteCreationPage({ env }) {
             </Typography>
           </Box>
         </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box
+        sx={{
+          py: 2,
+          textAlign: "center",
+          color: "text.secondary",
+          fontSize: "12px",
+          borderTop: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Typography variant="caption">
+          Otoroshi Simple UI - Powered by Otoroshi
+        </Typography>
       </Box>
     </>
   );
