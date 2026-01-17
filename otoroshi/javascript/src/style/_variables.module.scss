@@ -1,7 +1,8 @@
 $primaryColor: #f9b000;
 $primaryColor-lighter: lighten($primaryColor, 10%);
+$primaryColor-gradient: linear-gradient(135deg, #f9b000 0%, #f59e0b 100%);
 
-// old naming
+// old naming (kept for compatibility)
 $colorGris: #e6e6e6;
 $grisTexte: #b5b3b3;
 $fondNavbar: #494948;
@@ -14,18 +15,41 @@ $colorBleue: #00b4cd;
 $colorBleue-lighter:lighten($colorBleue, 10%);
 $colorRouge: #d5443f;
 
-//new naming
-// dark mode var
-$color-dark-1: #efefef;
-$color-dark-2: #e5e5e5;
-$color-dark-3: #9e9e9e;
-$color-dark-4: #595959;
-$color-dark-5: #494948;
-$color-dark-6: #373735;
+// New Design System - Dark Theme (inspired by Vercel/Linear)
+// Background colors
+$ds-bg-primary: #09090b;
+$ds-bg-elevated: #18181b;
+$ds-bg-card: #27272a;
+$ds-bg-input: rgba(9, 9, 11, 0.8);
 
-$color-dark-4-opa80: #59595980;
-$color-dark-5-opa80: #49494880;
-$color-dark-6-opa80: #37373580;
+// Border colors
+$ds-border-default: #3f3f46;
+$ds-border-hover: #52525b;
+$ds-border-subtle: rgba(63, 63, 70, 0.5);
+
+// Text colors
+$ds-text-primary: #fafafa;
+$ds-text-secondary: #a1a1aa;
+$ds-text-muted: #71717a;
+$ds-text-disabled: #52525b;
+
+// Semantic colors
+$ds-success: #10b981;
+$ds-success-bg: rgba(16, 185, 129, 0.1);
+$ds-error: #dc2626;
+$ds-error-bg: rgba(220, 38, 38, 0.1);
+
+// Legacy dark mode var (kept for compatibility)
+$color-dark-1: #fafafa;
+$color-dark-2: #a1a1aa;
+$color-dark-3: #71717a;
+$color-dark-4: #3f3f46;
+$color-dark-5: #27272a;
+$color-dark-6: #18181b;
+
+$color-dark-4-opa80: rgba(63, 63, 70, 0.8);
+$color-dark-5-opa80: rgba(39, 39, 42, 0.8);
+$color-dark-6-opa80: rgba(24, 24, 27, 0.8);
 
 //light mode var
 $color-white-1: #fff;
@@ -42,11 +66,12 @@ $color-white-4-opa80: #e1dfdf80;
   // globals
   --color-primary: #{$primaryColor};
   --color-primary-lighter: #{$primaryColor-lighter};
-  // --color-green: #5cb85c; 
-  --color-green: rgb(82, 161, 107); 
+  --color-primary-gradient: #{$primaryColor-gradient};
+  --color-primary-glow: rgba(249, 176, 0, 0.25);
+  --color-green: #{$ds-success};
   --color-blue: #{$colorBleue};
   --color-blue-lighter: #{$colorBleue-lighter};
-  --color-red: #d5443f;
+  --color-red: #{$ds-error};
   --color-grey:#e6e6e6;
   --color-white: #fff;
   --color-dark:#000;
@@ -55,21 +80,42 @@ $color-white-4-opa80: #e1dfdf80;
   --http_color-delete: rgb(249, 63, 62);
   --http_color-put: rgb(251, 161, 47);
   --http_color-others: rgb(155, 89, 182);
-  
-  // dark mode (default)
-  --bg-color_level1: #{$color-dark-6};
-  --color_level1: #{$color-dark-2};
-  --bg-color_level2: #{$color-dark-5};
-  --color_level2: #{$color-dark-2};
-  --bg-color_level3: #{$color-dark-4};
-  --color_level3: #{$color-dark-1};
 
-  --text: #fff;
+  // New design system tokens
+  --ds-bg-primary: #{$ds-bg-primary};
+  --ds-bg-elevated: #{$ds-bg-elevated};
+  --ds-bg-card: #{$ds-bg-card};
+  --ds-border-default: #{$ds-border-default};
+  --ds-border-hover: #{$ds-border-hover};
+  --ds-text-primary: #{$ds-text-primary};
+  --ds-text-secondary: #{$ds-text-secondary};
+  --ds-text-muted: #{$ds-text-muted};
+
+  // dark mode (default) - updated to new palette
+  --bg-color_level1: #{$ds-bg-primary};
+  --color_level1: #{$ds-text-secondary};
+  --bg-color_level2: #{$ds-bg-elevated};
+  --color_level2: #{$ds-text-secondary};
+  --bg-color_level3: #{$ds-bg-card};
+  --color_level3: #{$ds-text-primary};
+
+  --text: #{$ds-text-primary};
   --reverse-text: #000;
-  --raw-text: 255, 255, 255;
+  --raw-text: 250, 250, 250;
   --bg-color_level1_opa80: #{$color-dark-6-opa80};
   --bg-color_level2_opa80: #{$color-dark-5-opa80};
   --bg-color_level3_opa80: #{$color-dark-4-opa80};
+
+  // Border and shadow tokens
+  --border-color: #{$ds-border-default};
+  --border-color-hover: #{$ds-border-hover};
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --card-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+
+  // Radius tokens
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
 }
 
 [data-theme="light"] {
@@ -86,4 +132,9 @@ $color-white-4-opa80: #e1dfdf80;
   --bg-color_level1_opa80: #{$color-white-2-opa80};
   --bg-color_level2_opa80: #{$color-white-3-opa80};
   --bg-color_level3_opa80: #{$color-white-4-opa80};
+
+  --border-color: #e4e4e7;
+  --border-color-hover: #d4d4d8;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --card-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
