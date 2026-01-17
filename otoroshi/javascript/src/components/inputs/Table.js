@@ -1,27 +1,27 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Form, OffSwitch, OnSwitch } from '.';
-import { NgForm } from '../nginputs/form';
-import debounce from 'lodash/debounce';
-import get from 'lodash/get';
-import orderBy from 'lodash/orderBy';
-import { createTooltip } from '../../tooltips';
-import ReactTable from 'react-table';
+import React, { Component, useEffect, useState } from "react";
+import { Form, OffSwitch, OnSwitch } from ".";
+import { NgForm } from "../nginputs/form";
+import debounce from "lodash/debounce";
+import get from "lodash/get";
+import orderBy from "lodash/orderBy";
+import { createTooltip } from "../../tooltips";
+import ReactTable from "react-table";
 import {
   LabelAndInput,
   NgCodeRenderer,
   NgSelectRenderer,
   NgStringRenderer,
   NgTextRenderer,
-} from '../nginputs';
-import _ from 'lodash';
-import { Button } from '../Button';
-import { firstLetterUppercase } from '../../util';
-import { DraftEditorContainer, DraftStateDaemon } from '../Drafts/DraftEditor';
-import { updateEntityURLSignal } from '../Drafts/DraftEditorSignal';
-import { withRouter } from 'react-router-dom';
+} from "../nginputs";
+import _ from "lodash";
+import { Button } from "../Button";
+import { firstLetterUppercase } from "../../util";
+import { DraftEditorContainer, DraftStateDaemon } from "../Drafts/DraftEditor";
+import { updateEntityURLSignal } from "../Drafts/DraftEditorSignal";
+import { withRouter } from "react-router-dom";
 
 function urlTo(url) {
-  window.history.replaceState({}, '', url);
+  window.history.replaceState({}, "", url);
 }
 
 function LoadingComponent(props) {
@@ -30,9 +30,11 @@ function LoadingComponent(props) {
       className="loadingPage"
       style={{
         display:
-          props.loading && props.loadingText && props.loadingText.trim().length > 0
-            ? 'flex'
-            : 'none',
+          props.loading &&
+          props.loadingText &&
+          props.loadingText.trim().length > 0
+            ? "flex"
+            : "none",
       }}
     >
       {props.loadingText}
@@ -40,14 +42,21 @@ function LoadingComponent(props) {
   );
 }
 
-function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeField, coreFields }) {
+function ColumnsSelector({
+  fields,
+  onChange,
+  fetchTemplate,
+  addField,
+  removeField,
+  coreFields,
+}) {
   const [open, setOpen] = useState(false);
   const [isCustomFieldView, showCustomField] = useState(false);
 
   const [template, setTemplate] = useState();
 
-  const [fieldPath, setFieldPath] = useState('');
-  const [fieldExampleValue, setFieldExampleValue] = useState('');
+  const [fieldPath, setFieldPath] = useState("");
+  const [fieldExampleValue, setFieldExampleValue] = useState("");
 
   useEffect(() => {
     if (!template && fetchTemplate) fetchTemplate().then(setTemplate);
@@ -55,7 +64,9 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
 
   useEffect(() => {
     if (template)
-      setFieldExampleValue(fieldPath.split('.').reduce((r, k) => (r ? r[k] : {}), template));
+      setFieldExampleValue(
+        fieldPath.split(".").reduce((r, k) => (r ? r[k] : {}), template)
+      );
   }, [fieldPath]);
 
   const closeTab = () => {
@@ -72,33 +83,40 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
   return (
     <>
       <div
-        className={`wizard ${!open ? 'wizard--hidden' : ''}`}
-        style={{ background: 'none' }}
+        className={`wizard ${!open ? "wizard--hidden" : ""}`}
+        style={{ background: "none" }}
         onClick={closeTab}
       >
         <div
-          className={`wizard-container ${!open ? 'wizard--hidden' : ''}`}
+          className={`wizard-container ${!open ? "wizard--hidden" : ""}`}
           style={{
-            maxWidth: '50vw',
-            minWidth: '360px',
+            maxWidth: "50vw",
+            minWidth: "360px",
             zIndex: 1000,
-            border: 'var(--bg-color_level2) solid 1px',
+            border: "var(--bg-color_level2) solid 1px",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '2.5rem' }}>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              padding: "2.5rem",
+            }}
+          >
             <div className="d-flex justify-content-between align-items-center">
               <div className="d-flex align-items-center">
                 <i
                   className="fa fa-chevron-left me-3"
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                   onClick={() => {
                     if (isCustomFieldView) showCustomField(false);
                     else closeTab();
                   }}
                 />
-                <h3 style={{ fontSize: '1.5rem' }} className="text-center">
-                  {isCustomFieldView ? 'New column' : 'Columns'}
+                <h3 style={{ fontSize: "1.5rem" }} className="text-center">
+                  {isCustomFieldView ? "New column" : "Columns"}
                 </h3>
               </div>
               <Button
@@ -117,7 +135,11 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
             <div className="wizard-content">
               {isCustomFieldView && (
                 <>
-                  <NgStringRenderer label="Field path" onChange={setFieldPath} value={fieldPath} />
+                  <NgStringRenderer
+                    label="Field path"
+                    onChange={setFieldPath}
+                    value={fieldPath}
+                  />
                   <Button
                     type="save"
                     text="Add this column"
@@ -128,8 +150,8 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
 
                   <div
                     style={{
-                      border: 'var(--bg-color_level2) solid 1px',
-                      borderRadius: '4px',
+                      border: "var(--bg-color_level2) solid 1px",
+                      borderRadius: "4px",
                     }}
                     className="p-2 mb-2"
                   >
@@ -140,7 +162,7 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                       rawSchema={{
                         props: {
                           editorOnly: true,
-                          height: '100%',
+                          height: "100%",
                           ace_config: {
                             fontSize: 14,
                           },
@@ -150,8 +172,8 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                   </div>
                   <div
                     style={{
-                      border: 'var(--bg-color_level2) solid 1px',
-                      borderRadius: '4px',
+                      border: "var(--bg-color_level2) solid 1px",
+                      borderRadius: "4px",
                     }}
                     className="p-2"
                   >
@@ -161,7 +183,7 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                       rawSchema={{
                         props: {
                           editorOnly: true,
-                          height: '100%',
+                          height: "100%",
                           ace_config: {
                             fontSize: 14,
                           },
@@ -176,12 +198,12 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                 <>
                   <div
                     className="d-flex flex-column hidden-scrollbar"
-                    style={{ overflowY: 'scroll' }}
+                    style={{ overflowY: "scroll" }}
                   >
                     <Button
                       className="d-flex items-center mb-1 py-2"
                       style={{
-                        justifyContent: 'space-between',
+                        justifyContent: "space-between",
                       }}
                       onClick={() => showCustomField(true)}
                     >
@@ -190,27 +212,26 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                     </Button>
 
                     {Object.entries(fields).map(([column, enabled]) => {
-                      const columnParts = column.split('.');
+                      const columnParts = column.split(".");
 
                       return (
                         <div
                           className="mb-1 p-1 px-3 d-flex"
                           style={{
-                            border: 'var(--bg-color_level2) solid 1px',
-                            width: '100%',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            justifyContent: 'space-between',
+                            border: "var(--bg-color_level2) solid 1px",
+                            width: "100%",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            justifyContent: "space-between",
                           }}
                           onClick={() => onChange(column, !enabled)}
                           key={column}
                         >
                           <div className="d-flex items-center">
                             <label className={`col-xs-12 col-form-label`}>
-                              {firstLetterUppercase(columnParts.slice(-1)[0]).replace(
-                                /_/g,
-                                ' '
-                              )}{' '}
+                              {firstLetterUppercase(
+                                columnParts.slice(-1)[0]
+                              ).replace(/_/g, " ")}{" "}
                             </label>
                             {coreFields && !coreFields.includes(column) && (
                               <Button
@@ -226,8 +247,16 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
                             )}
                           </div>
                           <div className="">
-                            {enabled && <OnSwitch onChange={() => onChange(column, false)} />}
-                            {!enabled && <OffSwitch onChange={() => onChange(column, true)} />}
+                            {enabled && (
+                              <OnSwitch
+                                onChange={() => onChange(column, false)}
+                              />
+                            )}
+                            {!enabled && (
+                              <OffSwitch
+                                onChange={() => onChange(column, true)}
+                              />
+                            )}
                           </div>
                         </div>
                       );
@@ -241,7 +270,8 @@ function ColumnsSelector({ fields, onChange, fetchTemplate, addField, removeFiel
       </div>
       <Button
         type="info"
-        className="ms-auto btn-sm d-flex align-items-center mb-1"
+        className="btn-sm d-flex align-items-center"
+        style={{ whiteSpace: "nowrap" }}
         onClick={() => setOpen(true)}
       >
         <i className="fas fa-table-columns me-1" />
@@ -306,37 +336,43 @@ class TableComponent extends Component {
       this.forceUpdate();
       this.setPlaceholders();
     }, 400);
-    window.addEventListener('resize', this.sizeListener);
+    window.addEventListener("resize", this.sizeListener);
   };
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.sizeListener);
+    window.removeEventListener("resize", this.sizeListener);
     this.unmountShortcuts();
   }
 
   componentDidCatch(err, info) {
     this.setState({ hasError: true });
-    console.log('Table has error', err, info);
+    console.log("Table has error", err, info);
   }
 
   setPlaceholders = () => {
-    [...document.querySelectorAll('.rt-table input[type=text]')].map((r) =>
-      r.setAttribute('placeholder', 'Search ...')
+    [...document.querySelectorAll(".rt-table input[type=text]")].map((r) =>
+      r.setAttribute("placeholder", "Search ...")
     );
   };
 
   readRoute = () => {
     const { parentProps } = this.props;
-    const action = parentProps.params?.taction || parentProps.match?.params.taction;
+    const action =
+      parentProps.params?.taction || parentProps.match?.params.taction;
     const item = parentProps.params?.titem || parentProps.match?.params.titem;
 
     if (action) {
-      if (action === 'add') {
+      if (action === "add") {
         this.showAddForm();
-      } else if (action === 'edit') {
+      } else if (action === "edit") {
         this.props.fetchItems().then((res) => {
           let row = [];
-          if (typeof res === 'object' && res !== null && !Array.isArray(res) && res.data)
+          if (
+            typeof res === "object" &&
+            res !== null &&
+            !Array.isArray(res) &&
+            res.data
+          )
             row = res.data.filter((d) => this.props.extractKey(d) === item)[0];
           else row = res.filter((d) => this.props.extractKey(d) === item)[0];
           this.showEditForm(null, row);
@@ -346,11 +382,11 @@ class TableComponent extends Component {
   };
 
   mountShortcuts = () => {
-    document.body.addEventListener('keydown', this.saveShortcut);
+    document.body.addEventListener("keydown", this.saveShortcut);
   };
 
   unmountShortcuts = () => {
-    document.body.removeEventListener('keydown', this.saveShortcut);
+    document.body.removeEventListener("keydown", this.saveShortcut);
   };
 
   saveShortcut = (e) => {
@@ -376,16 +412,18 @@ class TableComponent extends Component {
   update = debounce((paginationState = {}) => {
     this.setState({ loading: true });
 
-    const page = paginationState.page !== undefined ? paginationState.page : this.state.page;
+    const page =
+      paginationState.page !== undefined
+        ? paginationState.page
+        : this.state.page;
 
-    return (
-      this.state.showAddForm || this.state.showEditForm
-        ? this.props.fetchItems()
-        : this.props.fetchItems({
-            ...paginationState,
-            pageSize: this.state.rowsPerPage,
-            page: page + 1,
-          })
+    return (this.state.showAddForm || this.state.showEditForm
+      ? this.props.fetchItems()
+      : this.props.fetchItems({
+          ...paginationState,
+          pageSize: this.state.rowsPerPage,
+          page: page + 1,
+        })
     ).then((rawItems) => {
       if (Array.isArray(rawItems)) {
         const sortedItems = [...rawItems];
@@ -402,7 +440,7 @@ class TableComponent extends Component {
                   return b?.localeCompare(a);
                 }
               } catch (_err) {
-                if ('boolean' === typeof a || 'boolean' === typeof b) {
+                if ("boolean" === typeof a || "boolean" === typeof b) {
                   if (~~sort.desc) return a === b ? 0 : a ? -1 : 1;
                   else return a === b ? 0 : a ? 1 : -1;
                 }
@@ -425,14 +463,20 @@ class TableComponent extends Component {
                 return paginationState.filtered.reduce((acc, filter) => {
                   const value = this.getValueAtPath(item, filter.id);
                   return (
-                    acc && String(value).toLowerCase().indexOf(filter.value.toLowerCase()) > -1
+                    acc &&
+                    String(value)
+                      .toLowerCase()
+                      .indexOf(filter.value.toLowerCase()) > -1
                   );
                 }, true);
               }
             }
             return true;
           })
-          .slice(this.state.rowsPerPage * page, this.state.rowsPerPage * (page + 1));
+          .slice(
+            this.state.rowsPerPage * page,
+            this.state.rowsPerPage * (page + 1)
+          );
 
         this.setState({
           items: newItems,
@@ -469,7 +513,7 @@ class TableComponent extends Component {
     }
 
     if (
-      typeof this.props.hideEditButton === 'function'
+      typeof this.props.hideEditButton === "function"
         ? !this.props.hideEditButton(item)
         : !this.props.hideEditButton
     ) {
@@ -539,19 +583,27 @@ class TableComponent extends Component {
     }
 
     if (
-      typeof this.props.hideEditButton === 'function'
+      typeof this.props.hideEditButton === "function"
         ? !this.props.hideEditButton(item)
         : !this.props.hideEditButton
     ) {
       this.mountShortcuts();
 
-      let routeTo = `/bo/dashboard/${this.props.selfUrl}/edit/${this.props.extractKey(item)}`;
+      let routeTo = `/bo/dashboard/${
+        this.props.selfUrl
+      }/edit/${this.props.extractKey(item)}`;
 
       if (this.props.rawEditUrl) {
-        routeTo = `/bo/dashboard/${this.props.selfUrl}/${this.props.extractKey(item)}`;
+        routeTo = `/bo/dashboard/${this.props.selfUrl}/${this.props.extractKey(
+          item
+        )}`;
       }
 
-      window.history.replaceState({}, `Update a ${this.props.itemName}`, routeTo);
+      window.history.replaceState(
+        {},
+        `Update a ${this.props.itemName}`,
+        routeTo
+      );
 
       if (this.props.parentProps.setTitle) {
         this.props.parentProps.setTitle(
@@ -566,33 +618,38 @@ class TableComponent extends Component {
 
   deleteItem = (e, item) => {
     if (e && e.preventDefault) e.preventDefault();
-    window.newConfirm('Are you sure you want to delete that item ?').then((ok) => {
-      if (ok) {
-        this.props
-          .deleteItem(item)
-          .then(() => {
-            const state = this.tableRef?.current?.state || {};
-            const page = state.page || 0;
+    window
+      .newConfirm("Are you sure you want to delete that item ?")
+      .then((ok) => {
+        if (ok) {
+          this.props
+            .deleteItem(item)
+            .then(() => {
+              const state = this.tableRef?.current?.state || {};
+              const page = state.page || 0;
 
-            return this.props.fetchItems({
-              filtered: state.filtered,
-              sorted: state.sorted,
-              pageSize: this.state.rowsPerPage,
-              page: page + 1,
+              return this.props.fetchItems({
+                filtered: state.filtered,
+                sorted: state.sorted,
+                pageSize: this.state.rowsPerPage,
+                page: page + 1,
+              });
+            })
+            .then((res) => {
+              const isPaginate =
+                typeof res === "object" &&
+                res !== null &&
+                !Array.isArray(res) &&
+                res.data;
+              urlTo(`/bo/dashboard/${this.props.selfUrl}`);
+              this.setState({
+                items: isPaginate ? res.data : res,
+                showEditForm: false,
+                showAddForm: false,
+              });
             });
-          })
-          .then((res) => {
-            const isPaginate =
-              typeof res === 'object' && res !== null && !Array.isArray(res) && res.data;
-            urlTo(`/bo/dashboard/${this.props.selfUrl}`);
-            this.setState({
-              items: isPaginate ? res.data : res,
-              showEditForm: false,
-              showAddForm: false,
-            });
-          });
-      }
-    });
+        }
+      });
   };
 
   createItem = (e) => {
@@ -604,9 +661,15 @@ class TableComponent extends Component {
       })
       .then((res) => {
         const isPaginate =
-          typeof res === 'object' && res !== null && !Array.isArray(res) && res.data;
+          typeof res === "object" &&
+          res !== null &&
+          !Array.isArray(res) &&
+          res.data;
         urlTo(`/bo/dashboard/${this.props.selfUrl}`);
-        this.setState({ items: isPaginate ? res.data : res, showAddForm: false });
+        this.setState({
+          items: isPaginate ? res.data : res,
+          showAddForm: false,
+        });
       });
   };
 
@@ -614,7 +677,9 @@ class TableComponent extends Component {
     if (e && e.preventDefault) e.preventDefault();
     this.props.createItem(this.state.currentItem).then(() => {
       urlTo(
-        `/bo/dashboard/${this.props.selfUrl}/edit/${this.props.extractKey(this.state.currentItem)}`
+        `/bo/dashboard/${this.props.selfUrl}/edit/${this.props.extractKey(
+          this.state.currentItem
+        )}`
       );
       this.setState({ showAddForm: false, showEditForm: true });
     });
@@ -629,8 +694,14 @@ class TableComponent extends Component {
       })
       .then((res) => {
         const isPaginate =
-          typeof res === 'object' && res !== null && !Array.isArray(res) && res.data;
-        this.setState({ items: isPaginate ? res.data : res, showEditForm: false });
+          typeof res === "object" &&
+          res !== null &&
+          !Array.isArray(res) &&
+          res.data;
+        this.setState({
+          items: isPaginate ? res.data : res,
+          showEditForm: false,
+        });
       });
   };
 
@@ -643,28 +714,30 @@ class TableComponent extends Component {
 
   exportJson = (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    const name = (this.state.currentItem.name || this.state.currentItem.clientName)
-      .replace(/ /g, '-')
-      .replace(/\(/g, '')
-      .replace(/\)/g, '')
-      .replace(/\./g, '')
+    const name = (
+      this.state.currentItem.name || this.state.currentItem.clientName
+    )
+      .replace(/ /g, "-")
+      .replace(/\(/g, "")
+      .replace(/\)/g, "")
+      .replace(/\./g, "")
       .toLowerCase();
     const itemName = this.props.itemName
-      .replace(/ /g, '-')
-      .replace(/\(/g, '')
-      .replace(/\)/g, '')
-      .replace(/\./g, '')
+      .replace(/ /g, "-")
+      .replace(/\(/g, "")
+      .replace(/\)/g, "")
+      .replace(/\./g, "")
       .toLowerCase();
     const json = JSON.stringify(
       { ...this.state.currentItem, kind: this.props.kubernetesKind },
       null,
       2
     );
-    const blob = new Blob([json], { type: 'application/json' });
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.id = String(Date.now());
-    a.style.display = 'none';
+    a.style.display = "none";
     a.download = `${itemName}-${name}-${Date.now()}.json`;
     a.href = url;
     document.body.appendChild(a);
@@ -673,7 +746,9 @@ class TableComponent extends Component {
   };
 
   isAnObject = (variable) =>
-    typeof variable === 'object' && !Array.isArray(variable) && variable !== null;
+    typeof variable === "object" &&
+    !Array.isArray(variable) &&
+    variable !== null;
 
   actualFlow = () => {
     if (_.isFunction(this.props.formFlow)) {
@@ -685,15 +760,17 @@ class TableComponent extends Component {
 
   exportYaml = (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    const name = (this.state.currentItem.name || this.state.currentItem.clientName)
-      .replace(/ /g, '-')
-      .replace(/\(/g, '')
-      .replace(/\)/g, '')
+    const name = (
+      this.state.currentItem.name || this.state.currentItem.clientName
+    )
+      .replace(/ /g, "-")
+      .replace(/\(/g, "")
+      .replace(/\)/g, "")
       .toLowerCase();
     const itemName = this.props.itemName
-      .replace(/ /g, '-')
-      .replace(/\(/g, '')
-      .replace(/\)/g, '')
+      .replace(/ /g, "-")
+      .replace(/\(/g, "")
+      .replace(/\)/g, "")
       .toLowerCase();
     /*
     // const json = YAML.stringify({
@@ -706,16 +783,16 @@ class TableComponent extends Component {
     });
     */
 
-    fetch('/bo/api/json_to_yaml', {
-      method: 'POST',
+    fetch("/bo/api/json_to_yaml", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        apiVersion: 'proxy.otoroshi.io/v1',
+        apiVersion: "proxy.otoroshi.io/v1",
         kind:
-          this.props.kubernetesKind.indexOf('/') > -1
-            ? this.props.kubernetesKind.split('/')[1]
+          this.props.kubernetesKind.indexOf("/") > -1
+            ? this.props.kubernetesKind.split("/")[1]
             : this.props.kubernetesKind,
         metadata: {
           name,
@@ -725,11 +802,11 @@ class TableComponent extends Component {
     })
       .then((r) => r.text())
       .then((yaml) => {
-        const blob = new Blob([yaml], { type: 'application/yaml' });
+        const blob = new Blob([yaml], { type: "application/yaml" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.id = String(Date.now());
-        a.style.display = 'none';
+        a.style.display = "none";
         a.download = `${itemName}-${name}-${Date.now()}.yaml`;
         a.href = url;
         document.body.appendChild(a);
@@ -779,9 +856,9 @@ class TableComponent extends Component {
                   if (this.props.rowNavigation) {
                     if (e.metaKey) {
                       if (this.props.itemUrl) {
-                        const a = document.createElement('a');
-                        a.setAttribute('target', '_blank');
-                        a.setAttribute('href', this.props.itemUrl(original));
+                        const a = document.createElement("a");
+                        a.setAttribute("target", "_blank");
+                        a.setAttribute("href", this.props.itemUrl(original));
                         a.click();
                       }
                     } else {
@@ -791,13 +868,13 @@ class TableComponent extends Component {
                 }}
                 style={{
                   cursor: (
-                    typeof this.props.hideEditButton === 'function'
+                    typeof this.props.hideEditButton === "function"
                       ? !this.props.hideEditButton(value)
                       : !this.props.hideEditButton
                   )
-                    ? 'pointer'
-                    : 'initial',
-                  width: '100%',
+                    ? "pointer"
+                    : "initial",
+                  width: "100%",
                 }}
               >
                 {c.wrappedCell ? c.wrappedCell(value, original, this) : value}
@@ -809,23 +886,27 @@ class TableComponent extends Component {
 
     if (this.props.showActions) {
       columns.push({
-        Header: 'Actions',
-        id: 'actions',
+        Header: "Actions",
+        id: "actions",
         minWidth: 160,
         maxWidth: 160,
-        style: { textAlign: 'left' },
+        style: { textAlign: "left" },
         filterable: false,
         sortable: false,
         accessor: (item) => (
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: "left" }}>
             <div>
-              {(typeof this.props.hideEditButton === 'function'
+              {(typeof this.props.hideEditButton === "function"
                 ? !this.props.hideEditButton(item)
                 : !this.props.hideEditButton) && (
                 <button
                   type="button"
                   className="btn btn-sm btn-success me-2"
-                  {...createTooltip(`Edit this ${this.props.itemName}`, 'top', true)}
+                  {...createTooltip(
+                    `Edit this ${this.props.itemName}`,
+                    "top",
+                    true
+                  )}
                   onClick={(e) => {
                     this.props.navigateOnEdit
                       ? this.props.navigateOnEdit(item)
@@ -839,7 +920,11 @@ class TableComponent extends Component {
               {this.props.showLink && (
                 <a
                   className="btn btn-sm btn-primary me-2"
-                  {...createTooltip(`Open this ${this.props.itemName}`, 'top', true)}
+                  {...createTooltip(
+                    `Open this ${this.props.itemName}`,
+                    "top",
+                    true
+                  )}
                   href={`${this.props.itemUrl(item)}`}
                   onClick={(e) =>
                     this.props.linkUrl
@@ -855,7 +940,11 @@ class TableComponent extends Component {
                   type="button"
                   className="btn btn-sm btn-danger me-2"
                   disabled
-                  {...createTooltip(`Delete this ${this.props.itemName}`, 'top', true)}
+                  {...createTooltip(
+                    `Delete this ${this.props.itemName}`,
+                    "top",
+                    true
+                  )}
                 >
                   <i className="fas fa-trash" />
                 </button>
@@ -865,7 +954,11 @@ class TableComponent extends Component {
                   type="button"
                   className="btn btn-sm btn-danger me-2"
                   onClick={(e) => this.deleteItem(e, item)}
-                  {...createTooltip(`Delete this ${this.props.itemName}`, 'top', true)}
+                  {...createTooltip(
+                    `Delete this ${this.props.itemName}`,
+                    "top",
+                    true
+                  )}
                 >
                   <i className="fas fa-trash" />
                 </button>
@@ -874,7 +967,11 @@ class TableComponent extends Component {
                 <button
                   type="button"
                   className="btn btn-sm btn-danger me-2"
-                  {...createTooltip(`Delete this ${this.props.itemName}`, 'top', true)}
+                  {...createTooltip(
+                    `Delete this ${this.props.itemName}`,
+                    "top",
+                    true
+                  )}
                   onClick={(e) => this.deleteItem(e, item)}
                 >
                   <i className="fas fa-trash" />
@@ -912,17 +1009,21 @@ class TableComponent extends Component {
               <div
                 className=""
                 style={{
-                  position: 'absolute',
+                  position: "absolute",
                   right: 0,
-                  top: '1.15rem',
-                  width: 'fit-content',
+                  top: "1.15rem",
+                  width: "fit-content",
                   paddingRight: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  flexWrap: "nowrap",
                 }}
               >
                 <button
                   type="button"
                   className="btn btn-primary btn-sm"
-                  {...createTooltip('Reload the current table')}
+                  {...createTooltip("Reload the current table")}
                   onClick={this.update}
                 >
                   <span className="fas fa-sync" />
@@ -931,7 +1032,6 @@ class TableComponent extends Component {
                   <button
                     type="button"
                     className="btn btn-primary btn-sm"
-                    style={{ marginLeft: 10 }}
                     onClick={this.showAddForm}
                     {...createTooltip(`Create a new ${this.props.itemName}`)}
                   >
@@ -939,26 +1039,26 @@ class TableComponent extends Component {
                   </button>
                 )}
                 {this.props.injectTopBar && this.props.injectTopBar()}
+                {this.props.fields && (
+                  <ColumnsSelector
+                    fetchTemplate={this.props.fetchTemplate}
+                    onChange={this.props.onToggleField}
+                    addField={this.props.addField}
+                    removeField={this.props.removeField}
+                    coreFields={this.props.coreFields}
+                    fields={Object.keys(this.props.fields)
+                      .sort()
+                      .reduce((r, k) => ((r[k] = this.props.fields[k]), r), {})}
+                  />
+                )}
               </div>
             </div>
-            <div className="rrow me-1" style={{ position: 'relative' }}>
-              {this.props.fields && (
-                <ColumnsSelector
-                  fetchTemplate={this.props.fetchTemplate}
-                  onChange={this.props.onToggleField}
-                  addField={this.props.addField}
-                  removeField={this.props.removeField}
-                  coreFields={this.props.coreFields}
-                  fields={Object.keys(this.props.fields)
-                    .sort()
-                    .reduce((r, k) => ((r[k] = this.props.fields[k]), r), {})}
-                />
-              )}
+            <div className="rrow me-1" style={{ position: "relative" }}>
               <ReactTable
                 ref={this.tableRef}
                 className="fulltable -striped -highlight"
                 style={{
-                  scrollbarWidth: 'none',
+                  scrollbarWidth: "none",
                 }}
                 manual
                 page={this.state.page}
@@ -978,14 +1078,20 @@ class TableComponent extends Component {
                   this.props.defaultFiltered
                     ? this.props.defaultFiltered
                     : this.props.search
-                      ? [{ id: this.props.columns[0]?.title, value: this.props.search }]
-                      : []
+                    ? [
+                        {
+                          id: this.props.columns[0]?.title,
+                          value: this.props.search,
+                        },
+                      ]
+                    : []
                 }
                 onFetchData={(state, instance) => {
                   this.update(state);
                 }}
                 onFilteredChange={(column, value) => {
-                  if (this.state.lastFocus) document.getElementById(this.state.lastFocus)?.focus();
+                  if (this.state.lastFocus)
+                    document.getElementById(this.state.lastFocus)?.focus();
                 }}
                 columns={columns}
                 LoadingComponent={LoadingComponent}
@@ -993,28 +1099,33 @@ class TableComponent extends Component {
                   const id = filter.pivotId || filter.id;
                   if (row[id] !== undefined) {
                     const value = String(row[id]);
-                    return value.toLowerCase().indexOf(filter.value.toLowerCase()) > -1;
+                    return (
+                      value.toLowerCase().indexOf(filter.value.toLowerCase()) >
+                      -1
+                    );
                   } else {
                     return true;
                   }
                 }}
               />
-              {!!!window.location.pathname.match(/routes\/([^\s]+)\/events/) && (
+              {!!!window.location.pathname.match(
+                /routes\/([^\s]+)\/events/
+              ) && (
                 <div
                   className="d-flex align-items-center"
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     bottom: 0,
                     left: 0,
-                    padding: '6px',
+                    padding: "6px",
                   }}
                 >
                   <p className="m-0 me-2">Rows per page</p>
-                  <div style={{ minWidth: '80px' }}>
+                  <div style={{ minWidth: "80px" }}>
                     <NgSelectRenderer
                       id="rows-per-page"
                       value={this.state.rowsPerPage}
-                      label={' '}
+                      label={" "}
                       ngOptions={{ spread: true }}
                       onChange={(rowsPerPage) =>
                         this.setState(
@@ -1038,11 +1149,13 @@ class TableComponent extends Component {
             {this.props.formComponent && (
               <>
                 {this.props.injectToolbar
-                  ? this.props.injectToolbar(this.state, (s) => this.setState(s))
+                  ? this.props.injectToolbar(this.state, (s) =>
+                      this.setState(s)
+                    )
                   : null}
                 <form
                   className="form-horizontal"
-                  style={{ paddingTop: '30px', ...this.props.style }}
+                  style={{ paddingTop: "30px", ...this.props.style }}
                 >
                   {React.createElement(this.props.formComponent, {
                     onStateChange: this.props.onStateChange,
@@ -1117,8 +1230,13 @@ class TableComponent extends Component {
             {!this.props.hideAllActions && (
               <>
                 <div className="displayGroupBtn float-end">
-                  <button type="button" className="btn btn-danger" onClick={this.closeAddForm}>
-                    <i className="fas fa-arrow-left" /> Back to {this.props.itemName}s
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={this.closeAddForm}
+                  >
+                    <i className="fas fa-arrow-left" /> Back to{" "}
+                    {this.props.itemName}s
                   </button>
                   {this.props.stayAfterSave && (
                     <button
@@ -1126,12 +1244,18 @@ class TableComponent extends Component {
                       className="btn btn-success"
                       onClick={this.createItemAndStay}
                     >
-                      <i className="fas fa-plus-circle" /> Create {this.props.itemName}
+                      <i className="fas fa-plus-circle" /> Create{" "}
+                      {this.props.itemName}
                     </button>
                   )}
                   {!this.props.stayAfterSave && (
-                    <button type="button" className="btn btn-success" onClick={this.createItem}>
-                      <i className="fas fa-plus-circle" /> Create {this.props.itemName}
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={this.createItem}
+                    >
+                      <i className="fas fa-plus-circle" /> Create{" "}
+                      {this.props.itemName}
                     </button>
                   )}
                 </div>
@@ -1145,7 +1269,10 @@ class TableComponent extends Component {
               this.props.injectToolbar
                 ? this.props.injectToolbar(this.state, (s) => this.setState(s))
                 : null,
-              <form className="form-horizontal" style={{ paddingTop: '30px', ...this.props.style }}>
+              <form
+                className="form-horizontal"
+                style={{ paddingTop: "30px", ...this.props.style }}
+              >
                 {React.createElement(this.props.formComponent, {
                   onStateChange: this.props.onStateChange,
                   onChange: (currentItem) => {
@@ -1160,7 +1287,9 @@ class TableComponent extends Component {
                   },
                   value: this.state.currentItem,
                   showAdvancedForm:
-                    this.props.selfUrl === 'jwt-verifiers' ? true : this.state.showAdvancedForm,
+                    this.props.selfUrl === "jwt-verifiers"
+                      ? true
+                      : this.state.showAdvancedForm,
                   ...(this.props.formPassProps || {}),
                 })}
               </form>,
@@ -1198,22 +1327,28 @@ class TableComponent extends Component {
               ))}
             <hr />
             <div className="displayGroupBtn float-end">
-              {this.props.displayTrash && this.props.displayTrash(this.state.currentItem) && (
-                <button type="button" className="btn btn-danger" title="Delete current item">
-                  <i className="fas fa-trash" /> Delete
-                </button>
-              )}
-              {this.props.displayTrash && !this.props.displayTrash(this.state.currentItem) && (
-                <button
-                  disabled
-                  type="button"
-                  className="btn btn-danger"
-                  title="Delete current item"
-                  onClick={(e) => this.deleteItem(e, this.state.currentItem)}
-                >
-                  <i className="fas fa-trash" /> Delete
-                </button>
-              )}
+              {this.props.displayTrash &&
+                this.props.displayTrash(this.state.currentItem) && (
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    title="Delete current item"
+                  >
+                    <i className="fas fa-trash" /> Delete
+                  </button>
+                )}
+              {this.props.displayTrash &&
+                !this.props.displayTrash(this.state.currentItem) && (
+                  <button
+                    disabled
+                    type="button"
+                    className="btn btn-danger"
+                    title="Delete current item"
+                    onClick={(e) => this.deleteItem(e, this.state.currentItem)}
+                  >
+                    <i className="fas fa-trash" /> Delete
+                  </button>
+                )}
               {this.props.export && (
                 <div className="btn-group">
                   <button
@@ -1247,17 +1382,30 @@ class TableComponent extends Component {
                 </button>
               )}
               {!this.props.newForm && (
-                <button type="button" className="btn btn-danger" onClick={this.closeEditForm}>
-                  <i className="fas fa-arrow-left" /> Back to {this.props.itemName}s
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={this.closeEditForm}
+                >
+                  <i className="fas fa-arrow-left" /> Back to{" "}
+                  {this.props.itemName}s
                 </button>
               )}
               {this.props.stayAfterSave && !this.props.newForm && (
-                <button type="button" className="btn btn-success" onClick={this.updateItemAndStay}>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={this.updateItemAndStay}
+                >
                   <i className="fas fa-edit" /> Update {this.props.itemName}
                 </button>
               )}
               {!this.props.stayAfterSave && !this.props.newForm && (
-                <button type="button" className="btn btn-success" onClick={this.updateItem}>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={this.updateItem}
+                >
                   <i className="fas fa-edit" /> Update {this.props.itemName} 2
                 </button>
               )}

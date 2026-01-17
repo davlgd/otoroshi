@@ -1,34 +1,37 @@
-import React, { useState } from 'react';
-import { Route, Switch, useLocation, withRouter } from 'react-router-dom';
-import { nextClient } from '../../services/BackOfficeServices';
-import Designer from './Designer';
-import { RoutesTable } from './RoutesTable';
-import { Informations } from './Informations';
-import DesignerSidebar from './Sidebar';
+import React, { useState } from "react";
+import { Route, Switch, useLocation, withRouter } from "react-router-dom";
+import { nextClient } from "../../services/BackOfficeServices";
+import Designer from "./Designer";
+import { RoutesTable } from "./RoutesTable";
+import { Informations } from "./Informations";
+import DesignerSidebar from "./Sidebar";
 
-import { ServiceEventsPage } from '../ServiceEventsPage';
-import { ServiceLiveStatsPage } from '../ServiceLiveStatsPage';
-import { ServiceHealthPage } from '../ServiceHealthPage';
-import { ServiceAnalyticsPage } from '../ServiceAnalyticsPage';
-import { ServiceApiKeysPage } from '../ServiceApiKeysPage';
-import { RouteWizard } from './RouteWizard';
-import { ImportServiceDescriptor } from './ImportServiceDescriptor';
-import { v4 } from 'uuid';
-import { FeedbackButton } from './FeedbackButton';
-import Loader from '../../components/Loader';
-import _ from 'lodash';
-import { Button } from '../../components/Button';
-import { DraftEditorContainer, PublisDraftButton } from '../../components/Drafts/DraftEditor';
-import { dynamicTitleContent } from '../../components/DynamicTitleSignal';
+import { ServiceEventsPage } from "../ServiceEventsPage";
+import { ServiceLiveStatsPage } from "../ServiceLiveStatsPage";
+import { ServiceHealthPage } from "../ServiceHealthPage";
+import { ServiceAnalyticsPage } from "../ServiceAnalyticsPage";
+import { ServiceApiKeysPage } from "../ServiceApiKeysPage";
+import { RouteWizard } from "./RouteWizard";
+import { ImportServiceDescriptor } from "./ImportServiceDescriptor";
+import { v4 } from "uuid";
+import { FeedbackButton } from "./FeedbackButton";
+import Loader from "../../components/Loader";
+import _ from "lodash";
+import { Button } from "../../components/Button";
+import {
+  DraftEditorContainer,
+  PublisDraftButton,
+} from "../../components/Drafts/DraftEditor";
+import { dynamicTitleContent } from "../../components/DynamicTitleSignal";
 
-import PageTitle from '../../components/PageTitle';
-import { Dropdown } from '../../components/Dropdown';
-import { YAMLExportButton } from '../../components/exporters/YAMLButton';
-import { JsonExportButton } from '../../components/exporters/JSONButton';
+import PageTitle from "../../components/PageTitle";
+import { Dropdown } from "../../components/Dropdown";
+import { YAMLExportButton } from "../../components/exporters/YAMLButton";
+import { JsonExportButton } from "../../components/exporters/JSONButton";
 
 function DuplicateModalContent({ value }) {
   return (
-    <pre style={{ height: 'inherit' }}>
+    <pre style={{ height: "inherit" }}>
       Frontend: {value.frontend.domains[0]}
       <br />
       Backend: {value.backend.targets[0].hostname}
@@ -44,15 +47,15 @@ function DuplicateButton({ value, history }) {
       type="primary"
       className="btn-sm ms-1"
       onClick={(e) => {
-        const what = window.location.pathname.split('/')[3];
-        const id = window.location.pathname.split('/')[4];
-        const prefix = (id.split('_')[0] || what) + '_';
+        const what = window.location.pathname.split("/")[3];
+        const id = window.location.pathname.split("/")[4];
+        const prefix = (id.split("_")[0] || what) + "_";
         const newId = `${prefix}${v4()}`;
         const kind = nextClient.ENTITIES.ROUTES;
         window
           .newConfirm(<DuplicateModalContent value={value} />, {
             title: `Duplicate ${value.name}`,
-            yesText: 'I want to duplicate this route',
+            yesText: "I want to duplicate this route",
           })
           .then((ok) => {
             if (ok) {
@@ -60,13 +63,13 @@ function DuplicateButton({ value, history }) {
                 .forEntityNext(kind)
                 .create({
                   ...value,
-                  name: value.name + ' (duplicated)',
+                  name: value.name + " (duplicated)",
                   id: newId,
                   enabled: false,
                 })
                 .then(() => {
                   // window.location = '/bo/dashboard/' + what + '/' + newId + '?tab=informations';
-                  history.push('/' + what + '/' + newId + '?tab=informations');
+                  history.push("/" + what + "/" + newId + "?tab=informations");
                 });
             }
           });
@@ -79,7 +82,7 @@ function DuplicateButton({ value, history }) {
 
 function MoreActionsButton({ value, history }) {
   return (
-    <div className="mb-1 d-flex" style={{ gap: '.5rem' }}>
+    <div className="mb-1 d-flex" style={{ gap: ".5rem" }}>
       <DuplicateButton value={value} history={history} />
       <YAMLExportButton value={value} entityKind="proxy.otoroshi.io/Route" />
       <JsonExportButton value={value} entityKind="proxy.otoroshi.io/Route" />
@@ -101,32 +104,34 @@ function ManagerTitle({
   const maybeExtensionTab = Otoroshi.extensions()
     .flatMap((ext) => ext.routeDesignerTabs || [])
     .find((item) => item.id === query);
-  const maybeExtensionTabLabel = maybeExtensionTab ? maybeExtensionTab.label : '';
+  const maybeExtensionTabLabel = maybeExtensionTab
+    ? maybeExtensionTab.label
+    : "";
 
   return (
     <PageTitle
       style={{
-        paddingBottom: pathname === '/routes' ? 'initial' : 0,
+        paddingBottom: pathname === "/routes" ? "initial" : 0,
       }}
       title={
         {
           flow: value.name,
           informations: isCreation ? `Create a new Route` : value.name,
-          routes: 'Routes',
-          route_plugins: 'Route plugins',
+          routes: "Routes",
+          route_plugins: "Route plugins",
         }[query] || maybeExtensionTabLabel
       }
       {...props}
     >
-      {!pathname.includes('routes/new') && (
+      {!pathname.includes("routes/new") && (
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: 0,
             right: 0,
-            margin: 'auto',
-            bottom: '1.25rem',
-            width: 'fit-content',
+            margin: "auto",
+            bottom: "1.25rem",
+            width: "fit-content",
           }}
         >
           <DraftEditorContainer entityId={value.id} value={value} />
@@ -134,12 +139,15 @@ function ManagerTitle({
       )}
 
       <Dropdown className="mb-1">
-        {!isCreation && (location.state?.routeFromService ? tab.tab === 'Informations' : true) && (
-          <MoreActionsButton value={value} history={history} />
-        )}
+        {!isCreation &&
+          (location.state?.routeFromService
+            ? tab.tab === "Informations"
+            : true) && <MoreActionsButton value={value} history={history} />}
       </Dropdown>
       {saveButton}
-      {!pathname.includes('routes/new') && <PublisDraftButton className="ms-2 mb-1" />}
+      {!pathname.includes("routes/new") && (
+        <PublisDraftButton className="ms-2 mb-1" />
+      )}
     </PageTitle>
   );
 }
@@ -171,11 +179,16 @@ class Manager extends React.Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.routeId !== prevProps.routeId || this.props.routeId === 'new') {
+    if (
+      this.props.routeId !== prevProps.routeId ||
+      this.props.routeId === "new"
+    ) {
       if (!this.state.template) this.loadRoute();
     }
 
-    if (['saveTypeButton'].some((field) => this.state[field] !== prevState[field])) {
+    if (
+      ["saveTypeButton"].some((field) => this.state[field] !== prevState[field])
+    ) {
       this.setTitle();
     }
   }
@@ -189,14 +202,16 @@ class Manager extends React.Component {
 
     const { history, location } = this.props;
 
-    let query = new URLSearchParams(location.search).get('tab');
+    let query = new URLSearchParams(location.search).get("tab");
 
-    if (!query && location.pathname.includes('?')) {
-      query = new URLSearchParams(`?${location.pathname.split('?')[1]}`).get('tab');
+    if (!query && location.pathname.includes("?")) {
+      query = new URLSearchParams(`?${location.pathname.split("?")[1]}`).get(
+        "tab"
+      );
     }
 
     const p = this.props.match.params;
-    const isCreation = p.routeId === 'new';
+    const isCreation = p.routeId === "new";
 
     const url = p.url;
 
@@ -220,7 +235,7 @@ class Manager extends React.Component {
   };
 
   updateSidebar = () => {
-    if (location.pathname.endsWith('/routes')) {
+    if (location.pathname.endsWith("/routes")) {
       this.props.setSidebarContent(null);
     } else {
       this.props.setSidebarContent(
@@ -237,19 +252,22 @@ class Manager extends React.Component {
   render() {
     const { history, location } = this.props;
 
-    let query = new URLSearchParams(location.search).get('tab');
+    let query = new URLSearchParams(location.search).get("tab");
 
-    if (!query && location.pathname.includes('?')) {
-      query = new URLSearchParams(`?${location.pathname.split('?')[1]}`).get('tab');
+    if (!query && location.pathname.includes("?")) {
+      query = new URLSearchParams(`?${location.pathname.split("?")[1]}`).get(
+        "tab"
+      );
     }
 
-    const isCreation = this.props.routeId === 'new';
+    const isCreation = this.props.routeId === "new";
 
     const { value, loading } = this.state;
 
     const divs = [
       {
-        predicate: query && ['flow', 'route_plugins'].includes(query) && !isCreation,
+        predicate:
+          query && ["flow", "route_plugins"].includes(query) && !isCreation,
         render: () => (
           <Designer
             {...this.props}
@@ -259,7 +277,9 @@ class Manager extends React.Component {
             setValue={(v) => {
               this.setState({ value: v }, this.setTitle);
             }}
-            setSaveButton={(n) => this.setState({ saveButton: n, saveTypeButton: 'routes' })}
+            setSaveButton={(n) =>
+              this.setState({ saveButton: n, saveTypeButton: "routes" })
+            }
           />
         ),
       },
@@ -275,7 +295,8 @@ class Manager extends React.Component {
                 query,
                 isCreation,
                 setValue: (v) => this.setState({ value: v }, this.setTitle),
-                setSaveButton: (n) => this.setState({ saveButton: n, saveTypeButton: item.id }),
+                setSaveButton: (n) =>
+                  this.setState({ saveButton: n, saveTypeButton: item.id }),
                 FeedbackButton: FeedbackButton,
                 props: this.props,
               }),
@@ -309,7 +330,10 @@ class Manager extends React.Component {
             value={value}
             setValue={(v) => this.setState({ value: v })}
             setSaveButton={(n) =>
-              this.setState({ saveButton: n, saveTypeButton: 'informations' }, this.setTitle)
+              this.setState(
+                { saveButton: n, saveTypeButton: "informations" },
+                this.setTitle
+              )
             }
           />
         </div>
@@ -324,9 +348,14 @@ const RoutesView = ({ history, globalEnv }) => {
 
   return (
     <>
-      {creation && <RouteWizard hide={() => setCreation(false)} history={history} />}
+      {creation && (
+        <RouteWizard hide={() => setCreation(false)} history={history} />
+      )}
       {importServiceDescriptor && (
-        <ImportServiceDescriptor hide={() => setImportServiceDescriptor(false)} history={history} />
+        <ImportServiceDescriptor
+          hide={() => setImportServiceDescriptor(false)}
+          history={history}
+        />
       )}
       <RoutesTable
         globalEnv={globalEnv}
@@ -335,24 +364,17 @@ const RoutesView = ({ history, globalEnv }) => {
             <button
               onClick={() => setCreation(true)}
               className="btn btn-primary btn-sm"
-              style={{
-                _backgroundColor: 'var(--color-primary)',
-                _borderColor: 'var(--color-primary)',
-                marginLeft: 5,
-              }}
+              style={{ whiteSpace: "nowrap" }}
             >
               <i className="fas fa-hat-wizard" /> Create with wizard
             </button>
             <button
               onClick={() => setImportServiceDescriptor(true)}
               className="btn btn-primary btn-sm"
-              style={{
-                _backgroundColor: 'var(--color-primary)',
-                _borderColor: 'var(--color-primary)',
-                marginLeft: 5,
-              }}
+              style={{ whiteSpace: "nowrap" }}
             >
-              <i className="fas fas fa-exchange-alt" /> Convert a service descriptor
+              <i className="fas fas fa-exchange-alt" /> Convert a service
+              descriptor
             </button>
           </>
         }
@@ -368,7 +390,7 @@ class RouteDesigner extends React.Component {
   };
 
   componentDidMount() {
-    this.props.setTitle('Routes');
+    this.props.setTitle("Routes");
 
     if (!this.props.location?.state?.value) {
       this.loadRoute();
@@ -386,7 +408,7 @@ class RouteDesigner extends React.Component {
   loadRoute = () => {
     const { routeId } = this.props.match.params || { routeId: undefined };
     if (
-      routeId === 'new' ||
+      routeId === "new" ||
       (this.props.location.state && this.props.location.state.routeFromService)
     ) {
       this.setState({ loading: false });
@@ -409,7 +431,13 @@ class RouteDesigner extends React.Component {
     //   return null
 
     if (Object.keys(match.params).length === 0)
-      return <Route component={() => <RoutesView history={history} globalEnv={globalEnv} />} />;
+      return (
+        <Route
+          component={() => (
+            <RoutesView history={history} globalEnv={globalEnv} />
+          )}
+        />
+      );
 
     return (
       <Switch>
@@ -417,37 +445,61 @@ class RouteDesigner extends React.Component {
           {
             path: `${match.url}/health`,
             component: (props) => (
-              <ServiceHealthPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceHealthPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
             path: `${match.url}/analytics`,
             component: (props) => (
-              <ServiceAnalyticsPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceAnalyticsPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
             path: `${match.url}/apikeys/:taction/:titem`,
             component: (props) => (
-              <ServiceApiKeysPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceApiKeysPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
             path: `${match.url}/apikeys`,
             component: (props) => (
-              <ServiceApiKeysPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceApiKeysPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
             path: `${match.url}/stats`,
             component: (props) => (
-              <ServiceLiveStatsPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceLiveStatsPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
             path: `${match.url}/events`,
             component: (props) => (
-              <ServiceEventsPage {...props} title={this.state.value?.name} {...match} />
+              <ServiceEventsPage
+                {...props}
+                title={this.state.value?.name}
+                {...match}
+              />
             ),
           },
           {
@@ -486,7 +538,11 @@ class RouteDesigner extends React.Component {
             />
           );
         })}
-        <Route component={() => <RoutesView history={history} globalEnv={globalEnv} />} />
+        <Route
+          component={() => (
+            <RoutesView history={history} globalEnv={globalEnv} />
+          )}
+        />
       </Switch>
     );
   }

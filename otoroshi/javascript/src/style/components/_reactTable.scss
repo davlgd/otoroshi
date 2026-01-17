@@ -10,16 +10,40 @@
     border: none;
   }
 
+  .rt-tbody {
+    .rt-tr-group {
+      border-bottom: 1px solid var(--border-color, #3f3f46);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .rt-tr {
+      &:hover {
+        background-color: var(--bg-color_level2);
+      }
+    }
+  }
+
   .rt-td {
     height: 40px !important;
   }
 
-  .rt-thead .rt-tr{
+  .rt-thead .rt-tr {
     text-align: left;
     font-weight: bold;
     font-size: 16px;
   }
-  
+
+  .rt-thead.-header {
+    border-bottom: 1px solid var(--border-color, #3f3f46);
+  }
+
+  .rt-thead.-filters {
+    border-bottom: 1px solid var(--border-color, #3f3f46);
+  }
+
   .-pageSizeOptions {
     display: none !important;
   }

@@ -1,26 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { Table } from '../../components/inputs';
-import { nextClient } from '../../services/BackOfficeServices';
-import { firstLetterUppercase } from '../../util';
-import Loader from '../../components/Loader';
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { Table } from "../../components/inputs";
+import { nextClient } from "../../services/BackOfficeServices";
+import { firstLetterUppercase } from "../../util";
+import Loader from "../../components/Loader";
 
-const FIELDS_SELECTOR = 'otoroshi-fields-selector';
+const FIELDS_SELECTOR = "otoroshi-fields-selector";
 
 const CORE_FIELDS = [
-  'id',
-  'name',
-  'description',
-  'tags',
-  'metadata',
-  'enabled',
-  'groups',
-  'frontend',
-  'backend',
-  'plugins',
+  "id",
+  "name",
+  "description",
+  "tags",
+  "metadata",
+  "enabled",
+  "groups",
+  "frontend",
+  "backend",
+  "plugins",
   // 'created at',
-  'metadata.updated_at',
-  'metadata.created_at',
+  "metadata.updated_at",
+  "metadata.created_at",
 ];
 
 export function RoutesTable(props) {
@@ -38,28 +38,28 @@ export function RoutesTable(props) {
     frontend: true,
     backend: true,
     groups: true,
-    'metadata.updated_at': true,
+    "metadata.updated_at": true,
 
     id: false,
     tags: false,
     metadata: false,
     plugins: false,
-    'created at': false,
-    'metadata.created_at': false,
+    "created at": false,
+    "metadata.created_at": false,
   });
 
   const domainColumn = {
-    title: 'Frontend',
-    filterId: 'frontend.domains.0',
+    title: "Frontend",
+    filterId: "frontend.domains.0",
     cell: (item, a) => {
       return (
         <>
-          {item.frontend.domains[0] || '-'}{' '}
+          {item.frontend.domains[0] || "-"}{" "}
           {item.frontend.domains.length > 1 && (
             <span
               className="badge bg-secondary"
-              style={{ cursor: 'pointer' }}
-              title={item.frontend.domains.map((v) => ` - ${v}`).join('\n')}
+              style={{ cursor: "pointer" }}
+              title={item.frontend.domains.map((v) => ` - ${v}`).join("\n")}
             >
               {item.frontend.domains.length - 1} more
             </span>
@@ -70,19 +70,22 @@ export function RoutesTable(props) {
   };
 
   const targetColumn = {
-    title: 'Backend',
-    filterId: 'backend.targets.0.hostname',
+    title: "Backend",
+    filterId: "backend.targets.0.hostname",
     cell: (item) => {
       return (
         <>
-          {item.backend.targets[0]?.hostname || '-'}{' '}
+          {item.backend.targets[0]?.hostname || "-"}{" "}
           {item.backend.targets.length > 1 && (
             <span
               className="badge bg-secondary"
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: "pointer" }}
               title={item.backend.targets
-                .map((v) => ` - ${v.tls ? 'https' : 'http'}://${v.hostname}:${v.port}`)
-                .join('\n')}
+                .map(
+                  (v) =>
+                    ` - ${v.tls ? "https" : "http"}://${v.hostname}:${v.port}`
+                )
+                .join("\n")}
             >
               {item.backend.targets.length - 1} more
             </span>
@@ -93,23 +96,26 @@ export function RoutesTable(props) {
   };
 
   const exposedColumn = {
-    title: 'Enabled',
-    id: 'enabled',
-    style: { textAlign: 'center', width: 90 },
+    title: "Enabled",
+    id: "enabled",
+    style: { textAlign: "center", width: 90 },
     notFilterable: true,
     cell: (_, item) =>
       item.enabled ? (
-        <span className="fas fa-check-circle" style={{ color: 'var(--color-green)' }} />
+        <span
+          className="fas fa-check-circle"
+          style={{ color: "var(--color-green)" }}
+        />
       ) : (
-        <span className="fas fa-times" style={{ color: 'var(--color-red)' }} />
+        <span className="fas fa-times" style={{ color: "var(--color-red)" }} />
       ),
   };
 
   const updatedAtColumn = {
-    title: 'Updated',
-    filterId: 'metadata.updated_at',
-    id: 'metadata.updated_at',
-    style: { textAlign: 'center', width: 160 },
+    title: "Updated",
+    filterId: "metadata.updated_at",
+    id: "metadata.updated_at",
+    style: { textAlign: "center", width: 160 },
     notFilterable: true,
     cell: (_, item) => formatFieldDate(item.metadata.updated_at),
   };
@@ -124,55 +130,57 @@ export function RoutesTable(props) {
         </span>
       );
     } else {
-      return '-';
+      return "-";
     }
   };
 
   const createdAtColumn = {
-    title: 'Created',
-    filterId: 'metadata.created_at',
-    id: 'metadata.created_at',
-    style: { textAlign: 'center', width: 160 },
+    title: "Created",
+    filterId: "metadata.created_at",
+    id: "metadata.created_at",
+    style: { textAlign: "center", width: 160 },
     notFilterable: true,
     cell: (_, item) => formatFieldDate(item.metadata.created_at),
   };
 
   const idColumn = {
-    title: 'Id',
+    title: "Id",
     content: (item) => item.id,
   };
 
   const descriptionColumn = {
-    title: 'Description',
+    title: "Description",
     content: (item) => item.description,
   };
 
   const tagsColumn = {
-    title: 'Tags',
-    content: (item) => (item.tags || []).join(','),
+    title: "Tags",
+    content: (item) => (item.tags || []).join(","),
     notSortable: true,
   };
 
   const metadataColumn = {
-    title: 'Metadata',
+    title: "Metadata",
     content: (item) =>
       Object.entries(item.metadata || {})
         .map(([key, value]) => `${key}:${value}`)
-        .join(' - '),
+        .join(" - "),
     notSortable: true,
   };
 
   const groupsColumn = {
-    title: 'Groups',
-    filterId: 'groups',
+    title: "Groups",
+    filterId: "groups",
     content: (item) =>
       (Array.isArray(item.groups) ? item.groups : [])
-        .map((group_id) => groups.find((g) => g.id === group_id)?.name || group_id)
-        .join(','),
+        .map(
+          (group_id) => groups.find((g) => g.id === group_id)?.name || group_id
+        )
+        .join(","),
   };
 
   const pluginsColumn = {
-    title: 'Plugins',
+    title: "Plugins",
     content: (item) => item.plugins?.length || 0,
     notSortable: true,
     notFilterable: true,
@@ -180,8 +188,8 @@ export function RoutesTable(props) {
 
   const columns = [
     {
-      title: 'Name',
-      filterId: 'name',
+      title: "Name",
+      filterId: "name",
       content: (item) => item.name,
       wrappedCell: (v, item, table) => {
         if (props.globalEnv && props.globalEnv.adminApiId === item.id) {
@@ -211,26 +219,34 @@ export function RoutesTable(props) {
     ...Object.keys(fields)
       .filter((f) => !CORE_FIELDS.includes(f))
       .map((field) => ({
-        title: firstLetterUppercase(field.split('.').slice(-1)[0]),
+        title: firstLetterUppercase(field.split(".").slice(-1)[0]),
         filterId: firstLetterUppercase(field),
         content: (item) => {
-          const value = field.split('.').reduce((r, k) => (r ? r[k] : {}), item);
+          const value = field
+            .split(".")
+            .reduce((r, k) => (r ? r[k] : {}), item);
           if (Array.isArray(value)) {
-            return (value || []).map((r) => JSON.stringify(r, null, 2)).join(',');
+            return (value || [])
+              .map((r) => JSON.stringify(r, null, 2))
+              .join(",");
           } else if (isAnObject(value)) {
             return Object.entries(value || {})
               .map(([key, value]) => `${key}:${JSON.stringify(value, null, 2)}`)
-              .join(' - ');
+              .join(" - ");
           } else {
-            return '' + value;
+            return "" + value;
           }
         },
         notSortable: true,
         notFilterable: true,
       })),
-  ].filter((c) => c && (fields[c.title?.toLowerCase()] || fields[c.filterId?.toLowerCase()]));
+  ].filter(
+    (c) =>
+      c && (fields[c.title?.toLowerCase()] || fields[c.filterId?.toLowerCase()])
+  );
 
-  const isAnObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+  const isAnObject = (v) =>
+    typeof v === "object" && v !== null && !Array.isArray(v);
 
   const deleteItem = (item, table) => {
     if (props.globalEnv.adminApiId === item.id) {
@@ -240,13 +256,17 @@ export function RoutesTable(props) {
         )
         .then((ok1) => {
           if (ok1) {
-            window.newConfirm(`Are you sure you really want to do that ?`).then((ok2) => {
-              if (ok1 && ok2) {
-                nextClient.remove(nextClient.ENTITIES.ROUTES, item).then(() => {
-                  // table.update();
-                });
-              }
-            });
+            window
+              .newConfirm(`Are you sure you really want to do that ?`)
+              .then((ok2) => {
+                if (ok1 && ok2) {
+                  nextClient
+                    .remove(nextClient.ENTITIES.ROUTES, item)
+                    .then(() => {
+                      // table.update();
+                    });
+                }
+              });
           }
         });
     } else {
@@ -259,13 +279,13 @@ export function RoutesTable(props) {
   const fetchItems = (paginationState) => {
     if (paginationState.filtered && paginationState.filtered.length > 0) {
       paginationState.filtered = paginationState.filtered.map((filter) => {
-        if (filter.id === 'groups') {
+        if (filter.id === "groups") {
           const value = filter.value;
           const fgroup = groups.filter(
             (g) => g.name.toLowerCase().indexOf(value.toLowerCase()) > -1
           );
           if (fgroup && fgroup.length > 0) {
-            return { id: 'groups', value: fgroup.map((g) => g.id).join('|') };
+            return { id: "groups", value: fgroup.map((g) => g.id).join("|") };
           } else {
             return filter;
           }
@@ -274,27 +294,32 @@ export function RoutesTable(props) {
         }
       });
     }
-    return nextClient.forEntityNext(nextClient.ENTITIES.ROUTES).findAllWithPagination({
-      ...paginationState,
-      fields: [
-        'backend.targets',
-        'enabled',
-        'frontend.domains',
-        'id',
-        'name',
-        'metadata',
-        ...Object.keys(fields).map((field) => (fields[field] ? field : undefined)),
-      ].filter((c) => c),
-    });
+    return nextClient
+      .forEntityNext(nextClient.ENTITIES.ROUTES)
+      .findAllWithPagination({
+        ...paginationState,
+        fields: [
+          "backend.targets",
+          "enabled",
+          "frontend.domains",
+          "id",
+          "name",
+          "metadata",
+          ...Object.keys(fields).map((field) =>
+            fields[field] ? field : undefined
+          ),
+        ].filter((c) => c),
+      });
   };
 
-  const fetchTemplate = () => nextClient.forEntityNext(nextClient.ENTITIES.ROUTES).template();
+  const fetchTemplate = () =>
+    nextClient.forEntityNext(nextClient.ENTITIES.ROUTES).template();
 
   const ref = useRef();
 
   const onFieldsChange = (fields) => {
     if (ref.current) {
-      console.log('update table');
+      console.log("update table");
       ref.current.update();
     }
 
@@ -310,12 +335,15 @@ export function RoutesTable(props) {
   const loadSearchParamsFromQuery = () => {
     const urlParams = new URLSearchParams(window.location.search);
 
-    const rawSearch = urlParams.get('search');
+    const rawSearch = urlParams.get("search");
 
     if (rawSearch) {
       try {
         setQueryFilters(
-          Object.entries(JSON.parse(atob(rawSearch))).map(([id, value]) => ({ id, value }))
+          Object.entries(JSON.parse(atob(rawSearch))).map(([id, value]) => ({
+            id,
+            value,
+          }))
         );
       } catch (_) {}
     }
@@ -323,7 +351,7 @@ export function RoutesTable(props) {
 
   const loadFields = () => {
     try {
-      const values = JSON.parse(localStorage.getItem(FIELDS_SELECTOR || '{}'));
+      const values = JSON.parse(localStorage.getItem(FIELDS_SELECTOR || "{}"));
 
       if (values.routes) setFields(values.routes);
     } catch (e) {
@@ -343,7 +371,7 @@ export function RoutesTable(props) {
 
   const saveFields = (fields) => {
     try {
-      const values = JSON.parse(localStorage.getItem(FIELDS_SELECTOR) || '{}');
+      const values = JSON.parse(localStorage.getItem(FIELDS_SELECTOR) || "{}");
 
       localStorage.setItem(
         FIELDS_SELECTOR,
@@ -365,7 +393,9 @@ export function RoutesTable(props) {
           defaultFiltered={queryFilters}
           parentProps={{ params }}
           navigateTo={(item) => history.push(`/routes/${item.id}?tab=flow`)}
-          navigateOnEdit={(item) => history.push(`/routes/${item.id}?tab=informations`)}
+          navigateOnEdit={(item) =>
+            history.push(`/routes/${item.id}?tab=informations`)
+          }
           selfUrl="routes"
           defaultTitle="Routes"
           itemName="Route"
@@ -409,8 +439,14 @@ export function RoutesTable(props) {
           itemUrl={(i) => `/bo/dashboard/routes/${i.id}?tab=flow`}
           rawEditUrl={true}
           injectTopBar={() => (
-            <div className="btn-group input-group-btn">
-              <Link className="btn btn-primary btn-sm" to={`routes/new?tab=informations`}>
+            <div
+              className="btn-group input-group-btn"
+              style={{ display: "flex", flexWrap: "nowrap", gap: "8px" }}
+            >
+              <Link
+                className="btn btn-primary btn-sm"
+                to={`routes/new?tab=informations`}
+              >
                 <i className="fas fa-plus-circle" /> Create new route
               </Link>
               {props.injectTopBar}
